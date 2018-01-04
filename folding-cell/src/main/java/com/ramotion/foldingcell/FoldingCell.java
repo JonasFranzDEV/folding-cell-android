@@ -46,7 +46,7 @@ public class FoldingCell extends RelativeLayout {
     private int mCameraHeight = DEF_CAMERA_HEIGHT;
 
     // listeners
-    private AnimationEndListener animationEndListener;
+    private AnimationEndListener unfoldAnimationListener;
 
     public FoldingCell(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -121,14 +121,14 @@ public class FoldingCell extends RelativeLayout {
         Bitmap bitmapFromTitleView = measureViewAndGetBitmap(titleView, this.getMeasuredWidth());
         Bitmap bitmapFromContentView = measureViewAndGetBitmap(contentView, this.getMeasuredWidth());
 
-        animationEndListener.onAnimationStart(null);
-        
+        unfoldAnimationListener.onAnimationStart(null);
+
         if (skipAnimation) {
             contentView.setVisibility(VISIBLE);
             FoldingCell.this.mUnfolded = true;
             FoldingCell.this.mAnimationInProgress = false;
             this.getLayoutParams().height = contentView.getHeight();
-            animationEndListener.onAnimationEnd(null);
+            unfoldAnimationListener.onAnimationEnd(null);
         } else {
             // create layout container for animation elements
             final LinearLayout foldingLayout = createAndPrepareFoldingContainer();
@@ -147,8 +147,8 @@ public class FoldingCell extends RelativeLayout {
                     FoldingCell.this.removeView(foldingLayout);
                     FoldingCell.this.mUnfolded = true;
                     FoldingCell.this.mAnimationInProgress = false;
-                    if (animationEndListener != null)
-                        animationEndListener.onAnimationEnd(animation);
+                    if (unfoldAnimationListener != null)
+                        unfoldAnimationListener.onAnimationEnd(animation);
                 }
             });
 
@@ -179,16 +179,12 @@ public class FoldingCell extends RelativeLayout {
         // make bitmaps from title and content views
         Bitmap bitmapFromTitleView = measureViewAndGetBitmap(titleView, this.getMeasuredWidth());
         Bitmap bitmapFromContentView = measureViewAndGetBitmap(contentView, this.getMeasuredWidth());
-
-        animationEndListener.onAnimationStart(null);
-
         if (skipAnimation) {
             contentView.setVisibility(GONE);
             titleView.setVisibility(VISIBLE);
             FoldingCell.this.mAnimationInProgress = false;
             FoldingCell.this.mUnfolded = false;
             this.getLayoutParams().height = titleView.getHeight();
-            animationEndListener.onAnimationEnd(null);
         } else {
 
             // create empty layout for folding animation
@@ -212,11 +208,9 @@ public class FoldingCell extends RelativeLayout {
                     FoldingCell.this.removeView(foldingLayout);
                     FoldingCell.this.mAnimationInProgress = false;
                     FoldingCell.this.mUnfolded = false;
-                    animationEndListener.onAnimationEnd(animation);
                 }
             });
             startCollapseHeightAnimation(heights, part90degreeAnimationDuration * 2);
-            this.mAnimationInProgress = true;
         }
 
 
@@ -561,11 +555,11 @@ public class FoldingCell extends RelativeLayout {
         this.requestLayout();
     }
 
-    public AnimationEndListener getAnimationEndListener() {
-        return animationEndListener;
+    public AnimationEndListener getUnfoldAnimationListener() {
+        return unfoldAnimationListener;
     }
 
-    public void setAnimationEndListener(AnimationEndListener animationEndListener) {
-        this.animationEndListener = animationEndListener;
+    public void setUnfoldAnimationListener(AnimationEndListener unfoldAnimationListener) {
+        this.unfoldAnimationListener = unfoldAnimationListener;
     }
 }
