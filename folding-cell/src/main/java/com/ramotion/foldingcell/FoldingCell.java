@@ -121,14 +121,14 @@ public class FoldingCell extends RelativeLayout {
         Bitmap bitmapFromTitleView = measureViewAndGetBitmap(titleView, this.getMeasuredWidth());
         Bitmap bitmapFromContentView = measureViewAndGetBitmap(contentView, this.getMeasuredWidth());
 
-        unfoldAnimationListener.onAnimationStart(null);
+        if (unfoldAnimationListener != null) unfoldAnimationListener.onAnimationStart(null);
 
         if (skipAnimation) {
             contentView.setVisibility(VISIBLE);
             FoldingCell.this.mUnfolded = true;
             FoldingCell.this.mAnimationInProgress = false;
             this.getLayoutParams().height = contentView.getHeight();
-            unfoldAnimationListener.onAnimationEnd(null);
+            if (unfoldAnimationListener != null) unfoldAnimationListener.onAnimationEnd(null);
         } else {
             // create layout container for animation elements
             final LinearLayout foldingLayout = createAndPrepareFoldingContainer();
