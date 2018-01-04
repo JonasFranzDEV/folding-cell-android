@@ -121,6 +121,8 @@ public class FoldingCell extends RelativeLayout {
         Bitmap bitmapFromTitleView = measureViewAndGetBitmap(titleView, this.getMeasuredWidth());
         Bitmap bitmapFromContentView = measureViewAndGetBitmap(contentView, this.getMeasuredWidth());
 
+        animationEndListener.onAnimationStart(null);
+        
         if (skipAnimation) {
             contentView.setVisibility(VISIBLE);
             FoldingCell.this.mUnfolded = true;
@@ -177,6 +179,8 @@ public class FoldingCell extends RelativeLayout {
         // make bitmaps from title and content views
         Bitmap bitmapFromTitleView = measureViewAndGetBitmap(titleView, this.getMeasuredWidth());
         Bitmap bitmapFromContentView = measureViewAndGetBitmap(contentView, this.getMeasuredWidth());
+
+        animationEndListener.onAnimationStart(null);
 
         if (skipAnimation) {
             contentView.setVisibility(GONE);
