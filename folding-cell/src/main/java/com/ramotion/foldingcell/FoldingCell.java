@@ -31,22 +31,22 @@ import java.util.List;
 public class FoldingCell extends RelativeLayout {
 
     private final String TAG = "folding-cell";
-
-    // state variables
-    private boolean mUnfolded;
-    private boolean mAnimationInProgress;
-
     // default values
     private final int DEF_ANIMATION_DURATION = 1000;
     private final int DEF_BACK_SIDE_COLOR = Color.GRAY;
     private final int DEF_ADDITIONAL_FLIPS = 0;
     private final int DEF_CAMERA_HEIGHT = 30;
-
+    // state variables
+    private boolean mUnfolded;
+    private boolean mAnimationInProgress;
     // current settings
     private int mAnimationDuration = DEF_ANIMATION_DURATION;
     private int mBackSideColor = DEF_BACK_SIDE_COLOR;
     private int mAdditionalFlipsCount = DEF_ADDITIONAL_FLIPS;
     private int mCameraHeight = DEF_CAMERA_HEIGHT;
+
+    // listeners
+    private AnimationEndListener animationEndListener;
 
     public FoldingCell(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -126,6 +126,7 @@ public class FoldingCell extends RelativeLayout {
             FoldingCell.this.mUnfolded = true;
             FoldingCell.this.mAnimationInProgress = false;
             this.getLayoutParams().height = contentView.getHeight();
+            animationEndListener.onAnimationEnd(null);
         } else {
             // create layout container for animation elements
             final LinearLayout foldingLayout = createAndPrepareFoldingContainer();
@@ -144,6 +145,8 @@ public class FoldingCell extends RelativeLayout {
                     FoldingCell.this.removeView(foldingLayout);
                     FoldingCell.this.mUnfolded = true;
                     FoldingCell.this.mAnimationInProgress = false;
+                    if (animationEndListener != null)
+                        animationEndListener.onAnimationEnd(animation);
                 }
             });
 
@@ -181,6 +184,7 @@ public class FoldingCell extends RelativeLayout {
             FoldingCell.this.mAnimationInProgress = false;
             FoldingCell.this.mUnfolded = false;
             this.getLayoutParams().height = titleView.getHeight();
+            animationEndListener.onAnimationEnd(null);
         } else {
 
             // create empty layout for folding animation
@@ -204,6 +208,7 @@ public class FoldingCell extends RelativeLayout {
                     FoldingCell.this.removeView(foldingLayout);
                     FoldingCell.this.mAnimationInProgress = false;
                     FoldingCell.this.mUnfolded = false;
+                    animationEndListener.onAnimationEnd(animation);
                 }
             });
             startCollapseHeightAnimation(heights, part90degreeAnimationDuration * 2);
@@ -552,4 +557,11 @@ public class FoldingCell extends RelativeLayout {
         this.requestLayout();
     }
 
+    public AnimationEndListener getAnimationEndListener() {
+        return animationEndListener;
+    }
+
+    public void setAnimationEndListener(AnimationEndListener animationEndListener) {
+        this.animationEndListener = animationEndListener;
+    }
 }
